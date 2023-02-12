@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Add Movies";
+}
+<!--Referencing our class-->
+@model Mission06_belengv.Models.ApplicationResponse;
+
+<h2>Enter new entries to your Movies collection:</h2>
+<div>
+    <!--Creating our form-->
+    <form method="post">
+        <label asp-for="Category">Category:</label>
+        <input asp-for="Category" />
+        <br />
+
+        <label asp-for="Title">Title:</label>
+        <input asp-for="Title" />
+        <br />
+
+        <label asp-for="Year">Year:</label>
+        <input asp-for="Year" />
+        <br />
+
+        <label asp-for="Director">Director:</label>
+        <input asp-for="Director" />
+        <br />
+
+        <!--Making a drop-down box-->
+        <label asp-for="Rating">Rating:</label>
+        <select asp-for="Rating">
+            <option>G</option>
+            <option>PG</option>
+            <option>PG-13</option>
+            <option>R</option>
+        </select>
+        <br />
+
+        <!--True or false-->
+        <label asp-for="Edited">Edited?:</label>
+        <select asp-for="Edited">
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+        <br />
+
+        <label asp-for="LentTo">Lent To:</label>
+        <input asp-for="LentTo" />
+        <br />
+
+        <!--Box for notes-->
+        <label asp-for="Notes">Notes:</label>
+        <textarea asp-for="Notes" rows="3"></textarea>
+        <br />
+
+        <!--Submiit button to add movies to database-->
+        <button type="submit">Add Entry</button>
+
+        <!--Displaying errors in case the fields are not properly filledout-->
+        <div asp-validation-summary="All"> </div>
+    </form>
+</div>
