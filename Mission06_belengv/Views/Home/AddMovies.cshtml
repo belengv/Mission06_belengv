@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Add Movies";
+
 }
 <!--Referencing our class-->
 @model Mission06_belengv.Models.ApplicationResponse;
@@ -8,8 +9,17 @@
 <div>
     <!--Creating our form-->
     <form method="post">
-        <label asp-for="Category">Category:</label>
-        <input asp-for="Category" />
+       
+        <label asp-for="CategoryId">Category:</label>
+        <select asp-for="CategoryId">
+            <option value="">Select a Category</option>
+            <!--creating our dropdown category menu-->
+            @foreach (Category m in ViewBag.Categories)
+            {
+                <option value="@m.CategoryId">@m.CategoryName</option>
+            }
+
+        </select>
         <br />
 
         <label asp-for="Title">Title:</label>

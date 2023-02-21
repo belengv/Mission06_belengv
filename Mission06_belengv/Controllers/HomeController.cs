@@ -6,19 +6,19 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Mission06_belengv.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        
         //Adding private instance
-        private AddMovieContext _MovieContext { get; set; }
+        private AddMovieContext DaContext { get; set; }
 
-        public HomeController(ILogger<HomeController> logger, AddMovieContext tempname)
-        {
-            _logger = logger;
-            _MovieContext = tempname;
+        public HomeController(AddMovieContext tempname)
+        {           
+            DaContext = tempname;
         }
 
         public IActionResult Index()
@@ -29,37 +29,73 @@ namespace Mission06_belengv.Controllers
         [HttpGet]
         public IActionResult AddMovies()
         {
+            //this holds our models and our category list items
+            ViewBag.Categories = DaContext.Categories.ToList();
+         
             return View();
         }
+
         [HttpPost]
         public IActionResult AddMovies(ApplicationResponse ar)
         {
-            //This would save the information that is filledout in the form
-            _MovieContext.Add(ar);
-            try //Used try and catch to display the data validation errors
+            //Making sure our entries are valid, the required field are filled out. If so, save changes
+            if (ModelState.IsValid)
             {
-                _MovieContext.SaveChanges();
+                DaContext.Add(ar);
+                DaContext.SaveChanges();
+                return View("MovieAdded", ar);
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine("An error occurred while saving changes: " + ex.Message);
-            }
-            //This will pass our variables
-            return View( ar);
+                ViewBag.Categories = DaContext.Categories.ToList();
+                return View();
+            }           
         }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+        
         public IActionResult Podcast()
         {
+            //view that contains the podcast link
             return View();
         }
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [HttpGet] //our movie collection view that contaings a table that dispalys our movie entries
+        public IActionResult Collection()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var movies = DaContext.Responses
+                .Include(x => x.Category)
+                .OrderBy(x => x.Title) //Alphabetical order on Title
+                .ToList();          
+            return View(movies); //returns our database responses
         }
+        [HttpGet]
+        public IActionResult Edit(int entryid) //receives and entry ID to make sure we edit the chosen entry
+        {
+            ViewBag.Categories = DaContext.Categories.ToList();
+            var movie = DaContext.Responses.Single(x => x.EntryId == entryid);
+            return View("AddMovies", movie); //direct us to our add movies view and displays the info that enty contains so we can edit it.
+        }
+        [HttpPost]
+        public IActionResult Edit(ApplicationResponse blah)
+        {
+            //Change fields info and save changes
+            DaContext.Update(blah);
+            DaContext.SaveChanges();
+
+            return RedirectToAction("Collection"); //redirect to our movie collection view and show the entry updated.
+        }
+        [HttpGet]
+        public IActionResult Delete(int entryid) //the entry ID selected for deletion is passed
+        {
+            var movied = DaContext.Responses.Single(x => x.EntryId == entryid);
+            return View(movied);
+        }
+        [HttpPost]
+        public IActionResult Delete(ApplicationResponse ar)
+        {
+            //Delete chosen entry and save changes 
+            DaContext.Responses.Remove(ar);
+            DaContext.SaveChanges();
+            return RedirectToAction("Collection"); //redirect to our movie collection view and show the table updated.
+        }
+
     }
 }

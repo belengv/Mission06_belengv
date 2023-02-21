@@ -8,7 +8,7 @@ using Mission06_belengv.Models;
 namespace Mission06_belengv.Migrations
 {
     [DbContext(typeof(AddMovieContext))]
-    [Migration("20230212091109_initial")]
+    [Migration("20230219075053_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,9 +23,8 @@ namespace Mission06_belengv.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Director")
                         .IsRequired()
@@ -54,13 +53,15 @@ namespace Mission06_belengv.Migrations
 
                     b.HasKey("EntryId");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Responses");
 
                     b.HasData(
                         new
                         {
                             EntryId = 1,
-                            Category = "Drama",
+                            CategoryId = 3,
                             Director = "Nikolas Sparks",
                             Edited = false,
                             LentTo = "Megan",
@@ -72,7 +73,7 @@ namespace Mission06_belengv.Migrations
                         new
                         {
                             EntryId = 2,
-                            Category = "Action",
+                            CategoryId = 1,
                             Director = "Sam Raimi",
                             Edited = true,
                             LentTo = "Carla",
@@ -84,7 +85,7 @@ namespace Mission06_belengv.Migrations
                         new
                         {
                             EntryId = 3,
-                            Category = "Action",
+                            CategoryId = 1,
                             Director = "Tony Scott",
                             Edited = false,
                             LentTo = "Mom",
@@ -93,6 +94,71 @@ namespace Mission06_belengv.Migrations
                             Title = "Top Gun",
                             Year = (ushort)2022
                         });
+                });
+
+            modelBuilder.Entity("Mission06_belengv.Models.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CategoryName")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 1,
+                            CategoryName = "Action/Adventure"
+                        },
+                        new
+                        {
+                            CategoryId = 2,
+                            CategoryName = "Comedy"
+                        },
+                        new
+                        {
+                            CategoryId = 3,
+                            CategoryName = "Drama"
+                        },
+                        new
+                        {
+                            CategoryId = 4,
+                            CategoryName = "Family"
+                        },
+                        new
+                        {
+                            CategoryId = 5,
+                            CategoryName = "Horror/Suspense"
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            CategoryName = "Miscellaneous"
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            CategoryName = "Television"
+                        },
+                        new
+                        {
+                            CategoryId = 8,
+                            CategoryName = "VHS"
+                        });
+                });
+
+            modelBuilder.Entity("Mission06_belengv.Models.ApplicationResponse", b =>
+                {
+                    b.HasOne("Mission06_belengv.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

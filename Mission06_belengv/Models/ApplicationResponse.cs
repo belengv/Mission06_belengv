@@ -12,9 +12,7 @@ namespace Mission06_belengv.Models
 
         [Key] //This is the primary key
         [Required]
-        public int EntryId { get; set; }
-        [Required]
-        public string Category { get; set; }
+        public int EntryId { get; set; }       
         [Required]
         public string Title { get; set; }
         [Required]
@@ -27,6 +25,10 @@ namespace Mission06_belengv.Models
         public string LentTo { get; set; } //Not required
         [MaxLength (25)]
         public string Notes { get; set; } //Max 25 characteres
-
+        
+        //Build Foreign key Relationship
+        [Required]
+        public int CategoryId { get; set; }
+        public Category Category { get; set; }
     }
 }

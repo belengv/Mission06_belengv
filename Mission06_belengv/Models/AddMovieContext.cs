@@ -14,15 +14,28 @@ namespace Mission06_belengv.Models
             //blank
         }
         public DbSet<ApplicationResponse> Responses { get; set; }
+        public DbSet<Category> Categories { get; set; }
 
         //Seeding my database with my 3 favorite movies
         protected override void OnModelCreating(ModelBuilder mb)
         {
+            mb.Entity<Category>().HasData(
+                new Category { CategoryId = 1, CategoryName= "Action/Adventure" },
+                new Category { CategoryId = 2, CategoryName = "Comedy" },
+                new Category { CategoryId = 3, CategoryName = "Drama" },
+                new Category { CategoryId = 4, CategoryName = "Family" },
+                new Category { CategoryId = 5, CategoryName = "Horror/Suspense" },
+                new Category { CategoryId = 6, CategoryName = "Miscellaneous" },
+                new Category { CategoryId = 7, CategoryName = "Television" },
+                new Category { CategoryId = 8, CategoryName = "VHS" }
+                
+            );
+
             mb.Entity<ApplicationResponse>().HasData(
                 new ApplicationResponse
                 {
                     EntryId = 1,
-                    Category = "Drama",
+                    CategoryId = 3,
                     Title = "The Longest Ride",
                     Director = "Nikolas Sparks",
                     Year = 2014,
@@ -35,7 +48,7 @@ namespace Mission06_belengv.Models
                 new ApplicationResponse
                 {
                     EntryId = 2,
-                    Category = "Action",
+                    CategoryId = 1,
                     Title = "The Amazing Spider Man",
                     Director = "Sam Raimi",
                     Year = 2012,
@@ -48,7 +61,7 @@ namespace Mission06_belengv.Models
                 new ApplicationResponse
                 {
                     EntryId = 3,
-                    Category = "Action",
+                    CategoryId = 1,
                     Title = "Top Gun",
                     Director = "Tony Scott",
                     Year = 2022,
